@@ -1,7 +1,7 @@
 #!python3
 
 """
-This subdir is meant for having a efficient
+This subdir is meant for having efficient
 DataLoaders to load the images/labels
 
 USAGE:
