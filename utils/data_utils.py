@@ -23,7 +23,7 @@ def get_img_feat(path_in, data_path, path_out, model, pre_process):
     with open(path_in)as f:
         train_img_data = f.read()
 
-    for l in train_img_data.split('\n')[:2]:
+    for l in train_img_data.split('\n'):
         image_id = l.split('.')[0]
         # Loading individual images
         img = load_img(f"{data_path}/{image_id}.jpg", target_size=TARGET_SIZE)
