@@ -17,6 +17,8 @@ img_feat_dict = {}
 
 
 def get_img_feat(path_in, data_path, path_out, model, pre_process):
+    ''' Method to extract image feature vectors using CNN and
+    dump as a pickle file'''
 
     TARGET_SIZE = (224, 224)
 
@@ -40,6 +42,43 @@ def get_img_feat(path_in, data_path, path_out, model, pre_process):
 
     with open(path_out, 'wb') as f:
         dump(img_feat_dict, f)
+
+
+def image_description(path_in, path_out):
+    '''
+    Method to create and dump a pickle file of image descriptions
+    Takes two string inputs,
+    path to token file and output for descriptions pickle file'''
+    with open(path_in) as f:
+        data = f.read()
+
+    # define a dictionary to store images and descriptions
+    image_desc = dict()
+
+    # converts input text to an array of images and captions
+    lines = data.split('\n')
+
+    # create a loop to add image name as key name and captions for each image as a list value for each key element
+    for l in lines:
+        desc = l.split('\t')
+        id , desc = desc[0], desc[1:]
+
+        # Drop .jpg from the image id
+        id = id.split('.')[0]
+
+        desc = " ".join(desc)
+
+        # check to see if image id exists in dictionary
+        if id in image_desc:
+            image_desc[id].append(desc)
+        else:
+            image_desc[id] = list()
+            image_desc[id].append(desc)
+
+    with open(f'{path_out}/image_descriptions.pkl', 'wb') as f:
+        dump(image_desc, f)
+
+
 """
 Write code to extract image features as train, test and split blocks
 Also extract captions and make ready to be fed into LSTM

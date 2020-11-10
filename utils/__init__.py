@@ -21,15 +21,7 @@ defined Params & Return definitions like this:
 
 def my_func(a,b):
     """
-#    Parameters
-#    -----------
-#    (...)
 
-#    Returns
-#    -----------
-#    (...)
-    """
 
-    return blah, blah
 
-"""
+
