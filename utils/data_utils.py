@@ -1,5 +1,6 @@
+import re
 from keras.applications.vgg16 import VGG16
-from keras.preprocessing.image import load_img,img_to_array
+from keras.preprocessing.image import load_img,  img_to_array
 from keras.applications.vgg16 import preprocess_input as preprocess_input_vgg
 from keras.applications.inception_v3 import InceptionV3
 from keras.applications.inception_v3 import preprocess_input as preprocess_input_inc
@@ -9,7 +10,7 @@ from pickle import dump,load
 #MODEL = VGG16(include_top=False, pooling='avg')
 MODEL=InceptionV3(include_top=False,pooling='avg')
 PATH_IN = "C:/Users/akhil/DSP/Flicker Data/Flickr8k_text/Flickr_8k.trainImages.txt"
-PATH_OUT_Inc = "C:/Users/akhil/PycharmProjects/Image-captioning---DSP/pkl files/inception_V3.pkl"
+PATH_OUT_Inc = "C:/Users/akhil/PycharmProjects/Image-captioning---DSP/pkl files"
 DATA_PATH = "C:/Users/akhil/DSP/Flicker Data/Flickr8k_Dataset/Flicker8k_Dataset"
 PRE_PROCESS = preprocess_input_inc
 
@@ -93,3 +94,87 @@ Step 5 Train the LSTM
   
 """
 
+def replace_contracted(phrase):
+    # specific
+    phrase = re.sub(r"won't", "will not", phrase)
+    phrase = re.sub(r"can\'t", "can not", phrase)
+
+    # general
+    phrase = re.sub(r"n\'t", " not", phrase)
+    phrase = re.sub(r"\'re", " are", phrase)
+    phrase = re.sub(r"\'s", " is", phrase)
+    phrase = re.sub(r"\'d", " would", phrase)
+    phrase = re.sub(r"\'ll", " will", phrase)
+    phrase = re.sub(r"\'t", " not", phrase)
+    phrase = re.sub(r"\'ve", " have", phrase)
+    phrase = re.sub(r"\'m", " am", phrase)
+    return phrase
+
+
+def append_seq(d, path_out)
+'''
+Appends start and stop sequence to data files
+'''
+    for l in d.keys():
+        caption_list = d[l]
+        new_caption = []
+        for c in caption_list:
+            # replace special characters in the sentences
+            sent = replace_contracted(c)
+            sent = sent.replace('\\r', ' ')
+            sent = sent.replace('\\"', ' ')
+            sent = sent.replace('\\n', ' ')
+            sent = re.sub('[^A-Za-z0-9]+', ' ', sent)
+
+            append_seq = 'startseq ' + sent.lower() + 'endseq'
+            new_caption.append(append_seq)
+        d[l] = new_caption
+
+    with open(f'{path_out}/image_description_seq_append.pkl', 'wb') as f:
+        dump(d, f)
+
+
+def image_name_extract(description, p):
+    '''
+    Extracts image names looking up names from the text file and image_description_seq_append dictionary
+    Returns a dict of image names with captions
+
+    '''
+    image_descriptions = {}
+
+    with open(p, 'r') as f:
+        data = f.read()
+
+    for lines in data.split('\n'):
+        captions = []
+        image_id = lines.split('.')[0]
+        image_descriptions[image_id] = description[image_id]
+    return image_descriptions
+
+
+def description_split(description, path_in, path_out):
+    '''
+    Dumps data into different pickle files for train,test and dev captions
+    Takes image_description_seq_append dictionary, input and output path as arguments
+
+    '''
+    if path_in.split('/')[6][10:] == 'trainImages.txt':
+        train_image_captions = image_name_extract(description, path_in)
+
+        # Dumps data
+        with open(f'{path_out}/train_image_descriptions.pkl', 'wb') as f:
+            dump(train_image_captions, f)
+
+    if path_in.split('/')[6][10:] == 'testImages.txt':
+        test_image_captions = image_name_extract(description, path_in)
+
+        # Dumps data
+        with open(f'{path_out}/test_image_descriptions.pkl', 'wb') as f:
+            dump(test_image_captions, f)
+
+    if path_in.split('/')[6][10:] == 'devImages.txt':
+        dev_image_captions = image_name_extract(description, path_in)
+
+        # Dumps data
+        with open(f'{path_out}/dev_image_descriptions.pkl', 'wb') as f:
+            dump(dev_image_captions, f)
