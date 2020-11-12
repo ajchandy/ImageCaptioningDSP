@@ -111,7 +111,7 @@ def replace_contracted(phrase):
     return phrase
 
 
-def append_seq(d, path_out)
+def append_seq(d, path_out):
 '''
 Appends start and stop sequence to data files
 '''
