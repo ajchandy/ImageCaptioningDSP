@@ -32,7 +32,7 @@ for ew in list(vocabulary):
 
 
 VOCAB_SIZE = len(vocabulary)+1
-print("Total unique words after remooving less frequent word from our corpus = {}".format(VOCAB_SIZE))
+print("Total unique words after removing less frequent word from our corpus = {}".format(VOCAB_SIZE))
 
 
 caption_list = []
@@ -71,7 +71,7 @@ for ec in caption_list:
         MAX_LENGTH = temp
 
 
-print("Maximum caption has length of {}".format(MAX_LENGTH))
+print(f"Maximum caption has length of {format(MAX_LENGTH)}")
 
 # make sure you have the glove_vectors file
 with open('pkl files/glove_vector.pkl', 'rb') as f:

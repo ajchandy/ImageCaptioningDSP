@@ -9,3 +9,5 @@ TO DO:
 - [ ] Training Loop
 - [ ] Inference
 
+The Caption_prep.py file reuses code from 'https://github.com/Raman-Raje/ImageCaptioning/blob/master/dataset%20preperation.ipynb'
+
