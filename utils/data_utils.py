@@ -14,12 +14,13 @@ PATH_OUT_Inc = "C:/Users/akhil/PycharmProjects/Image-captioning---DSP/pkl files"
 DATA_PATH = "C:/Users/akhil/DSP/Flicker Data/Flickr8k_Dataset/Flicker8k_Dataset"
 PRE_PROCESS = preprocess_input_inc
 
-img_feat_dict = {}
+
 
 
 def get_img_feat(path_in, data_path, path_out, model, pre_process):
     ''' Method to extract image feature vectors using CNN and
     dump as a pickle file'''
+    img_feat_dict = {}
 
     TARGET_SIZE = (224, 224)
 
